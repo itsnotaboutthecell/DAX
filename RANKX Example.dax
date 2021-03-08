@@ -1,0 +1,23 @@
+Count Rank = 
+VAR _colCompare =
+    CALCULATETABLE (
+        SUMMARIZE (
+            ALLSELECTED ( Sheet1 ),
+            Sheet1[location],
+            Sheet1[class],
+            Sheet1[code]
+        ),
+        NOT ISBLANK ( Sheet1[Previous] )
+    )
+VAR _RankRate =
+    RANKX (
+        _colCompare,
+        IF ( ISBLANK ( [Measure] ), 99999, [Measure] ),
+        ,
+        ASC,
+        DENSE
+    )
+VAR Result =
+    IF ( NOT ISBLANK ( [Measure] ), _RankRate, BLANK () )
+RETURN
+    Result
